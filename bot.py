@@ -525,12 +525,33 @@ def back_to_main(m):
     bot.send_message(m.chat.id, "🏠 Главное меню:", reply_markup=main_menu_markup(m.from_user.id))
 
 # ==========================
-# Запуск бота
+# 🚀 Запуск на Render (Web Service)
 # ==========================
+from flask import Flask
+import threading
+
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return "✅ Бот работает на Render!", 200
+
+def run_bot():
+    print("🤖 Бот запущен через polling...")
+    while True:
+        try:
+            bot.infinity_polling(skip_pending=True)
+        except Exception as e:
+            print("Ошибка polling:", e)
+            traceback.print_exc()
+            time.sleep(10)
+
 if __name__ == "__main__":
-    print("🤖 Бот запущен...")
-    try:
-        bot.infinity_polling(skip_pending=True)
-    except Exception as e:
-        print("Fatal:", e)
-        traceback.print_exc()
+    # Запускаем бота в отдельном потоке
+    threading.Thread(target=run_bot, daemon=True).start()
+    
+    # Запускаем Flask, чтобы Render видел открытый порт
+    port = int(os.environ.get("PORT", 5000))
+    print(f"🌐 Flask-сервер слушает порт {port}")
+    app.run(host="0.0.0.0", port=port)
+
