@@ -9,8 +9,16 @@ import traceback
 # ==========================
 # ⚙️ Настройки — Вставь свой токен
 # ==========================
-TOKEN = "TELEGRAM_TOKEN"   # <- Поставь сюда реальный токен
-ALLOWED_USERS = [279799183]  # <- сюда твой Telegram ID
+TOKEN = os.getenv("TELEGRAM_TOKEN")
+print("TOKEN:", TOKEN)
+if not TOKEN or ":" not in TOKEN:
+    raise ValueError(f"Неверный токен: {TOKEN}")
+ADMIN_ID = 279799183
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+USERS_FILE = os.path.join(BASE_DIR, "users.json")
+RATES_FILE = os.path.join(BASE_DIR, "rates.json")
+ADDRESSES_FILE = os.path.join(BASE_DIR, "addresses.json")
+PAYMENTS_FILE = os.path.join(BASE_DIR, "payments.json")
 
 # Карта и дефолтные адреса — использованы твои значения
 DEFAULT_CARD = "5232441047703876"
